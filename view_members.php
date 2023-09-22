@@ -29,7 +29,7 @@ $result = $conn->query($sql);
 
 <head>
     <?php include 'cdn.php'; ?>
-    <title>View Members</title>
+    <title>View Members - St. Theresa Catholic Church</title>
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
     <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
     <link rel="stylesheet" href="./css/base.css">
@@ -83,7 +83,7 @@ $result = $conn->query($sql);
 
     <div class="download">
         <div class="download-buttons">
-            <a href="generate_csv.php" >Download as CSV</a>
+            <a href="generate_csv.php">Download as CSV</a>
         </div>
 
     </div>

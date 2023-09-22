@@ -12,7 +12,7 @@ if (!isset($_SESSION['username'])) {
 
 <head>
     <?php include 'cdn.php'; ?>
-    <title>Add Member</title>
+    <title>Add Member - St. Theresa Catholic Church</title>
     <link rel="stylesheet" href="./css/base.css">
     <link rel="stylesheet" href="./css/addmember.css">
 </head>

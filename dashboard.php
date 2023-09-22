@@ -23,28 +23,8 @@ if (!isset($_SESSION['username'])) {
         <h1>Welcome <?php echo $_SESSION['username']; ?>,</h1>
     </div>
 
-    <div class="dash-grid">
-        <div class="dash">
-
-        </div>
-        <div class="dash">
-
-        </div>
-        <div class="dash">
-
-        </div>
-
-        <div class="dash">
-
-        </div>
-        <div class="dash">
-
-        </div>
-        <div class="dash">
-
-        </div>
-    </div>
-<?php include 'footer.php'; ?>
+   <h1>Under Construction</h1>
+    <?php include 'footer.php'; ?>
 </body>
 
 </html>
