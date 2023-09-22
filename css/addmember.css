@@ -1,0 +1,87 @@
+.heading {
+    margin-top: 50px;
+    padding: 0 5%;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    padding: 0 5%;
+}
+
+.forms {
+    display: flex;
+    flex-direction: column;
+    margin-top: 30px;
+}
+
+.forms input {
+    width: 95%;
+    height: 50px;
+    padding-left: 3%;
+    background-color: #ffffff;
+    border: 1px solid #1d292d;
+}
+
+.forms select {
+    width: 95%;
+    height: 50px;
+    padding-left: 3%;
+    background-color: #ffffff;
+    border: 1px solid #1d292d;
+}
+
+.forms input:focus {
+    outline: 1px solid #1d292d;
+}
+
+.forms input::placeholder {
+    color: #1d292d;
+}
+
+.forms select:focus {
+    outline: 1px solid #1d292d;
+}
+
+.forms select::placeholder {
+    color: #1d292d;
+}
+
+ .checkbox-wrapper-39 *,
+ .checkbox-wrapper-39 *::before,
+ .checkbox-wrapper-39 *::after {
+     box-sizing: border-box;
+ }
+
+.chosen-select{
+    height: 50px !important;
+}
+
+ .form{
+    margin-top: 50px;
+    padding: 0 5%;
+ }
+
+ .form button{
+    padding: 15px 45px;
+    background-color: #1d292d;
+    color: #ffffff;
+    border: none;
+ }
+
+
+@media only screen and (max-width: 1180px) {
+
+    .form-grid{
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media only screen and (max-width: 780px) {
+
+    .form-grid {
+        display: grid;
+        grid-template-columns: 1fr ;
+    }
+}
