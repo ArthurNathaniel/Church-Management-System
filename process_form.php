@@ -1,147 +1,117 @@
 <?php
 session_start();
 
-// Check if the user is logged in
 if (!isset($_SESSION['username'])) {
-    header("Location: login.php"); // Redirect to the login page if not logged in
-    exit; // Terminate the script to prevent further execution
+    header("Location: login.php");
+    exit;
 }
 
-// Check if the form is submitted
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Connect to the database (replace with your database credentials)
-    // $db_host = "localhost";
-    // $db_user = "root";
-    // $db_password = "";
-    // $db_name = "church-member";
-    $db_host = "sttheresaasawase.org"; // If the database is hosted on the same server
-    $db_user = "u500921674_members";
-    $db_password = "Members@123"; // Replace with the actual password
-    $db_name = "u500921674_members";
+    include "db.php";
 
-    $conn = new mysqli($db_host, $db_user, $db_password, $db_name);
+    // Process profile image upload
+    $targetDirectory = "uploads/";
+    $targetFile = $targetDirectory . basename($_FILES["file-input"]["name"]);
+    $uploadOk = 1;
+    $imageFileType = strtolower(pathinfo($targetFile, PATHINFO_EXTENSION));
 
-    // Check connection
-    if ($conn->connect_error) {
-        die("Connection failed: " . $conn->connect_error);
+    // Check if image file is an actual image or fake image
+    $check = getimagesize($_FILES["file-input"]["tmp_name"]);
+    if ($check === false) {
+        $uploadOk = 0;
     }
 
-    // Get form data
-    $surname = $_POST['surname'];
-    $othername = $_POST['othername'];
-    $firstname = $_POST['firstname'];
-    $houseaddress = $_POST['houseaddress'];
-    $digitaladdress = $_POST['digitaladdress'];
-    $contactnumber = $_POST['contactnumber'];
-    $emergencycontactnumber = $_POST['emergencycontactnumber'];
-    $hometown = $_POST['hometown'];
-    $dateofbirth = $_POST['dateofbirth'];
-    $gender = $_POST['gender'];
-    $country = $_POST['country'];
-    $martialstatus = $_POST['martialstatus'];
-    $nameofspouse = $_POST['nameofspouse'];
-    $numberofchildren = $_POST['numberofchildren'];
-    $nameofchildren = $_POST['nameofchildren'];
-    $nameofmother = $_POST['nameofmother'];
-    $mothersdenomination = $_POST['mothersdenomination'];
-    $nameoffather = $_POST['nameoffather'];
-    $fathersdenomination = $_POST['fathersdenomination'];
-    $placeofemployment = $_POST['placeofemployment'];
-    $position = $_POST['position'];
-    $baptized = $_POST['baptized'];
-    $placeofbaptism = $_POST['placeofbaptism'];
-    $confirmed = $_POST['confirmed'];
-    $placeofconfirmed = $_POST['placeofconfirmed'];
+    // Check file size
+    if ($_FILES["file-input"]["size"] > 500000) {
+        $uploadOk = 0;
+    }
 
-    // Get selected societies as an array
-    $societies = isset($_POST['chosen-select']) ? $_POST['chosen-select'] : array();
+    // Allow certain file formats
+    $allowedExtensions = array("jpg", "jpeg", "png", "gif");
+    if (!in_array($imageFileType, $allowedExtensions)) {
+        $uploadOk = 0;
+    }
 
-    // Convert the array of societies into a comma-separated string
-    $societiesString = implode(', ', $societies);
+    // Check if $uploadOk is set to 0 by an error
+    if ($uploadOk == 0) {
+        // You can handle errors here if needed
+    } else {
+        if (move_uploaded_file($_FILES["file-input"]["tmp_name"], $targetFile)) {
+            // File uploaded successfully
+        } else {
+            // Error uploading file
+            echo '<script>alert("Error uploading file."); window.location.href = "addmember.php";</script>';
+            exit;
+        }
+    }
 
-    // Modify the SQL query to include the 'societies' column
-    $sql = "INSERT INTO members (surname, othername, firstname, houseaddress, digitaladdress, contactnumber, emergencycontactnumber, hometown, dateofbirth, gender, country, martialstatus, nameofspouse, numberofchildren, nameofchildren, nameofmother, mothersdenomination, nameoffather, fathersdenomination, placeofemployment, position, baptized, placeofbaptism, confirmed, placeofconfirmed, societies) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    // Store the profile image path in the database
+    $profileImagePath = $uploadOk ? $targetFile : null;
+
+    // Check for duplicate entry
+    $checkDuplicate = $conn->prepare("SELECT * FROM members WHERE surname = ? AND othername = ? AND firstname = ? AND dateofbirth = ?");
+    $checkDuplicate->bind_param("ssss", $_POST['surname'], $_POST['othername'], $_POST['firstname'], $_POST['dateofbirth']);
+    $checkDuplicate->execute();
+    $checkDuplicateResult = $checkDuplicate->get_result();
+
+    if ($checkDuplicateResult->num_rows > 0) {
+        // Duplicate entry found, display alert and redirect
+        echo '<script>alert("Member with the same details already exists."); window.location.href = "addmember.php";</script>';
+        exit;
+    }
+
+    // Modify your SQL query to include the 'profile_image' column
+    $sql = "INSERT INTO members (surname, othername, firstname, houseaddress, digitaladdress, contactnumber, emergencycontactnumber, hometown, dateofbirth, gender, country, martialstatus, nameofspouse, numberofchildren, nameofchildren, nameofmother, mothersdenomination, nameoffather, fathersdenomination, placeofemployment, position, baptized, placeofbaptism, confirmed, placeofconfirmed, societies, profile_image) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     $stmt = $conn->prepare($sql);
 
-    // Check if the statement preparation was successful
     if ($stmt) {
-        // Create an array of values to bind including the societies string
         $valuesToBind = array(
-            $surname,
-            $othername,
-            $firstname,
-            $houseaddress,
-            $digitaladdress,
-            $contactnumber,
-            $emergencycontactnumber,
-            $hometown,
-            $dateofbirth,
-            $gender,
-            $country,
-            $martialstatus,
-            $nameofspouse,
-            $numberofchildren,
-            $nameofchildren,
-            $nameofmother,
-            $mothersdenomination,
-            $nameoffather,
-            $fathersdenomination,
-            $placeofemployment,
-            $position,
-            $baptized,
-            $placeofbaptism,
-            $confirmed,
-            $placeofconfirmed,
-            $societiesString // Insert the comma-separated string
+            $_POST['surname'],
+            $_POST['othername'],
+            $_POST['firstname'],
+            $_POST['houseaddress'],
+            $_POST['digitaladdress'],
+            $_POST['contactnumber'],
+            $_POST['emergencycontactnumber'],
+            $_POST['hometown'],
+            $_POST['dateofbirth'],
+            $_POST['gender'],
+            $_POST['country'],
+            $_POST['martialstatus'],
+            $_POST['nameofspouse'],
+            $_POST['numberofchildren'],
+            $_POST['nameofchildren'],
+            $_POST['nameofmother'],
+            $_POST['mothersdenomination'],
+            $_POST['nameoffather'],
+            $_POST['fathersdenomination'],
+            $_POST['placeofemployment'],
+            $_POST['position'],
+            $_POST['baptized'],
+            $_POST['placeofbaptism'],
+            $_POST['confirmed'],
+            $_POST['placeofconfirmed'],
+            implode(', ', isset($_POST['chosen-select']) ? $_POST['chosen-select'] : array()),
+            $profileImagePath
         );
 
-        // Create the bind_param string dynamically based on the number of values to bind
         $bindParamString = str_repeat('s', count($valuesToBind));
-
-        // Bind the parameters
         $stmt->bind_param($bindParamString, ...$valuesToBind);
 
-        // Execute the statement
         if ($stmt->execute()) {
-            // Data inserted successfully
-            header("Location: view_members.php"); // Redirect to the page to display data
-            exit; // Terminate the script to prevent further execution
+            // Record inserted successfully
+            echo '<script>alert("Member added successfully!"); window.location.href = "addmember.php";</script>';
+            exit;
         } else {
-            echo "Error: " . $stmt->error;
+            // Error inserting record
+            echo '<script>alert("Error adding member. Please try again.");</script>';
         }
 
         $stmt->close();
     } else {
-        echo "Error: " . $conn->error;
+        // Error in preparing the SQL statement
+        echo '<script>alert("Error preparing SQL statement.");</script>';
     }
 
     $conn->close();
 }
-?>
-<!DOCTYPE html>
-<html>
-
-<head>
-    <?php include 'cdn.php'; ?>
-    <title>Add Member</title>
-    <link rel="stylesheet" href="./css/base.css">
-    <link rel="stylesheet" href="./css/addmember.css">
-</head>
-
-<body>
-    <?php include 'navbar.php'; ?>
-    <form action="process_form.php" method="post">
-        <!-- ... (rest of your HTML form) ... -->
-    </form>
-    <?php include 'footer.php'; ?>
-    <script>
-        // Initialize Chosen for the select element
-        $(document).ready(function() {
-            $(".chosen-select").chosen();
-        });
-    </script>
-    <script src="./javascript/date.js"></script>
-    <script src="./javascript/country.js"></script>
-</body>
-
-</html>

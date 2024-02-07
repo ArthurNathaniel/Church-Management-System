@@ -1,9 +1,9 @@
 <?php
 session_start();
 
-// Check if the user is logged in
 if (!isset($_SESSION['username'])) {
-    header("Location: login.php"); // Redirect to the login page if not logged in
+    header("Location: login.php");
+    exit;
 }
 ?>
 
@@ -18,12 +18,24 @@ if (!isset($_SESSION['username'])) {
 </head>
 
 <body>
+
     <?php include 'navbar.php'; ?>
-    <form action="process_form.php" method="post">
+    <form action="process_form.php" method="post" enctype="multipart/form-data">
+        <div class="heading">
+            <h1>Profile Image</h1>
+        </div>
+        <div class="profile_all">
+            <img id="img-preview" src="<?php echo isset($targetFile) ? $targetFile : './images/me.jpeg'; ?>" />
+
+
+
+
+            <label for="file-input" class="label">Upload Image</label>
+            <input accept="image/*" type="file" name="file-input" id="file-input" required />
+        </div>
         <div class="heading">
             <h1>Personal Information</h1>
         </div>
-
         <div class="form-grid">
             <div class="forms">
                 <label>Surname:</label>
@@ -41,7 +53,6 @@ if (!isset($_SESSION['username'])) {
                 <label>House Address:</label>
                 <input type="text" placeholder="Enter your house address/number" name="houseaddress" required>
             </div>
-
             <div class="forms">
                 <label>Digital Address:</label>
                 <input type="text" placeholder="Enter your digital address" name="digitaladdress" required>
@@ -64,7 +75,7 @@ if (!isset($_SESSION['username'])) {
             </div>
             <div class="forms">
                 <label>Gender:</label>
-                <select name="gender" id="gender">
+                <select name="gender" id="gender" required>
                     <option value="" selected hidden> Select Gender</option>
                     <option value="Female">Female</option>
                     <option value="Male">Male</option>
@@ -72,13 +83,13 @@ if (!isset($_SESSION['username'])) {
             </div>
             <div class="forms">
                 <label>Nationality:</label>
-                <select id="country" name="country">
+                <select id="country" name="country" required>
                     <option value="" selected hidden> Select Nationality</option>
                 </select>
             </div>
             <div class="forms">
                 <label>Martial Status:</label>
-                <select name="martialstatus" id="martialstatus">
+                <select name="martialstatus" id="martialstatus" required>
                     <option value="" selected hidden> Martial Status</option>
                     <option value="Single">Single</option>
                     <option value="Married">Married</option>
@@ -102,7 +113,7 @@ if (!isset($_SESSION['username'])) {
             </div>
             <div class="forms">
                 <label>Mother's Denomination:</label>
-                <select name="mothersdenomination" id="mothersdenomination">
+                <select name="mothersdenomination" id="mothersdenomination" required>
                     <option value="" selected hidden> Mother's Denomination</option>
                     <option value="Catholic">Catholic</option>
                     <option value="Other">Other</option>
@@ -114,7 +125,7 @@ if (!isset($_SESSION['username'])) {
             </div>
             <div class="forms">
                 <label>Father's Denomination:</label>
-                <select name="fathersdenomination" id="fathersdenomination">
+                <select name="fathersdenomination" id="fathersdenomination" required>
                     <option value="" selected hidden> Father's Denomination</option>
                     <option value="Catholic">Catholic</option>
                     <option value="Other">Other</option>
@@ -127,53 +138,46 @@ if (!isset($_SESSION['username'])) {
         <div class="form-grid">
             <div class="forms">
                 <label>Place of Employment:</label>
-                <input type="text" placeholder="Enter of place of employment" name="placeofemployment" required>
+                <input type="text" placeholder="Enter of place of employment" name="placeofemployment">
             </div>
-
-
             <div class="forms">
                 <label>Position:</label>
-                <input type="text" placeholder="Enter of your position" name="position" required>
+                <input type="text" placeholder="Enter of your position" name="position">
             </div>
         </div>
-
         <div class="heading">
             <h1>Baptism Information</h1>
         </div>
         <div class="form-grid">
             <div class="forms">
                 <label>Baptized</label>
-                <select name="baptized" id="baptized">
+                <select name="baptized" id="baptized" required>
                     <option value="" selected hidden>Select Baptized</option>
                     <option value="Yes">Yes</option>
                     <option value="No">No</option>
                 </select>
             </div>
-
             <div class="forms">
                 <label>Place of Baptism:</label>
-                <input type="text" placeholder="Enter of place of baptism" name="placeofbaptism" required>
+                <input type="text" placeholder="Enter of place of baptism" name="placeofbaptism">
             </div>
         </div>
-
         <div class="heading">
             <h1>Confirmation Information</h1>
         </div>
         <div class="form-grid">
             <div class="forms">
                 <label>Confirmed:</label>
-                <select name="confirmed" id="confirmed">
+                <select name="confirmed" id="confirmed" required>
                     <option value="" selected hidden>Select Confirmation</option>
                     <option value="Yes">Yes</option>
                     <option value="No">No</option>
                 </select>
             </div>
-
             <div class="forms">
                 <label>Place of Confirmation:</label>
-                <input type="text" placeholder="Enter of place of confirmation" name="placeofconfirmed" required>
+                <input type="text" placeholder="Enter of place of confirmation" name="placeofconfirmed">
             </div>
-
         </div>
         <div class="heading">
             <h1>Additional Information</h1>
@@ -203,15 +207,12 @@ if (!isset($_SESSION['username'])) {
                     <option value="St Theresa Guild">St Theresa Guild</option>
                     <option value="KLBS">KLBS</option>
                     <option value="Knight and Ladies of St John">Knight and Ladies of St John</option>
-
                 </select>
             </div>
         </div>
-
         <div class="form">
             <button type="submit">Add Member</button>
         </div>
-
     </form>
     <?php include 'footer.php'; ?>
     <script>
@@ -220,8 +221,24 @@ if (!isset($_SESSION['username'])) {
             $(".chosen-select").chosen();
         });
     </script>
+    <script>
+        const input = document.getElementById("file-input");
+        const image = document.getElementById("img-preview");
+
+        input.addEventListener("change", (e) => {
+            if (e.target.files.length) {
+                const src = URL.createObjectURL(e.target.files[0]);
+                image.src = src;
+            } else {
+                // Alert when no image is added
+                alert("Please select an image");
+            }
+        });
+    </script>
+
     <script src="./javascript/date.js"></script>
     <script src="./javascript/country.js"></script>
+    <script src="./javascript/mode.js"></script>
 </body>
 
 </html>

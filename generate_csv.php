@@ -1,16 +1,6 @@
 <?php
-// Connect to the database (replace with your database credentials)
-$db_host = "sttheresaasawase.org"; // If the database is hosted on the same server
-$db_user = "u500921674_members";
-$db_password = "Members@123"; // Replace with the actual password
-$db_name = "u500921674_members";
-
-$conn = new mysqli($db_host, $db_user, $db_password, $db_name);
-
-// Check connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
+// Connect to the database 
+include "db.php";
 
 // Retrieve data from the database
 $sql = "SELECT * FROM members";
@@ -27,10 +17,6 @@ if ($result->num_rows > 0) {
         $societies = explode(', ', $row['societies']);
         $societies_str = implode("\n", $societies);
         fputcsv($csv_file, array(
-            // $row['surname'],
-            // $row['othername'],
-            // $row['firstname'],
-            // $societies_str
 
             $row['surname'],
             $row['othername'],
@@ -58,6 +44,7 @@ if ($result->num_rows > 0) {
             $row['confirmed'],
             $row['placeofconfirmed'],
             $societies_str
+
         ));
     }
 } else {

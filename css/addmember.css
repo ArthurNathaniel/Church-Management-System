@@ -20,7 +20,7 @@
     height: 50px;
     padding-left: 3%;
     background-color: #ffffff;
-    border: 1px solid #1d292d;
+    border: 1px solid #6158e5;
 }
 
 .forms select {
@@ -28,11 +28,11 @@
     height: 50px;
     padding-left: 3%;
     background-color: #ffffff;
-    border: 1px solid #1d292d;
+    border: 1px solid #6158e5;
 }
 
 .forms input:focus {
-    outline: 1px solid #1d292d;
+    outline: 1px solid #6158e5;
 }
 
 .forms input::placeholder {
@@ -40,11 +40,11 @@
 }
 
 .forms select:focus {
-    outline: 1px solid #1d292d;
+    outline: 1px solid #6158e5;
 }
 
 .forms select::placeholder {
-    color: #1d292d;
+    color: #6158e5;
 }
 
  .checkbox-wrapper-39 *,
@@ -64,17 +64,60 @@
 
  .form button{
     padding: 15px 45px;
-    background-color: #1d292d;
+    background-color: #6158e5;
     color: #ffffff;
     border: none;
  }
+.profile_all {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 30px;
+    padding-left: 5%;
+}
 
+#img-preview {
+    width: 200px;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 50%;
+    margin-block: 30px;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+
+#file-input {
+    display: none;
+}
+
+.label {
+    cursor: pointer;
+    color: #fff;
+    border-radius: 8px;
+    padding: 10px 20px;
+    background-color: #6158e5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 200px;
+    height: 50px;
+
+
+}
 
 @media only screen and (max-width: 1180px) {
 
     .form-grid{
         display: grid;
         grid-template-columns: 1fr 1fr;
+    }
+    .forms{
+        
+        align-items: center;
+    }
+    label{
+        text-align: left;
+        width: 95%;
+       
     }
 }
 
@@ -83,5 +126,18 @@
     .form-grid {
         display: grid;
         grid-template-columns: 1fr ;
+    }
+
+    .forms input{
+        width: 100%;
+    }
+    .forms select{
+        width: 100%;
+    }
+
+    label {
+        text-align: left;
+        width:100%;
+    
     }
 }
