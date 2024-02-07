@@ -3,7 +3,6 @@ session_start();
 
 include "db.php";
 
-
 // Get user input
 $username = $_POST['username'];
 $password = $_POST['password'];
@@ -19,10 +18,14 @@ if (mysqli_num_rows($result) == 1) {
         $_SESSION['username'] = $username;
         header("Location: dashboard.php"); // Redirect to a protected dashboard page
     } else {
-        echo "Invalid password. <a href='login.php'>Try again</a>";
+        // Invalid password
+        echo "<script>alert('Invalid password. Please try again.');</script>";
+        echo "<script>window.location.href='login.php';</script>";
     }
 } else {
-    echo "Invalid username. <a href='login.php'>Try again</a>";
+    // Invalid username
+    echo "<script>alert('Invalid username. Please try again.');</script>";
+    echo "<script>window.location.href='login.php';</script>";
 }
 
 mysqli_close($conn);

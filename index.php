@@ -12,19 +12,29 @@
 
 <body>
     <div class="page_all">
-        <h1>Hello</h1>
-        <h1>Welcome to the best faculty in KsTU</h1>
+        <div class="logo"></div>
+        <h1>Welcome to St. Theresa Catholic Church Asawase</h1>
         <h1 class="typed-text"></h1>
 
+
         <button>
-            <a href="./login.php" >Login as Admin</a>
+            <a href="./login.php">Login as Admin</a>
         </button>
+    </div>
+
+    <div class="lasst">
+        <p>All Copyright &copy; Reserved
+            <script>
+                document.write(new Date().getFullYear())
+            </script>
+            | St. Theresa Catholic Church Asawase
+        </p>
     </div>
 </body>
 <script>
     document.addEventListener("DOMContentLoaded", function() {
         var options = {
-            strings: ["Faculty of Applied Science and Technology"],
+            strings: ["ROMAN DEƐ ƐNOAA NE ASAWASE,", "WOPƐ ADE PA BRA ASAWASE"],
             typeSpeed: 50,
             backSpeed: 50,
             backDelay: 4000,
