@@ -56,6 +56,7 @@ if (!$result) {
             <table id="memberTable" class="display" style="width:100%">
                 <thead>
                     <tr>
+                        <th>ID</th>
                         <th>Profile Image</th>
                         <th>Surname</th>
                         <th>Other Name</th>
@@ -70,8 +71,11 @@ if (!$result) {
                 <tbody>
                     <?php
                     if ($result->num_rows > 0) {
+                       
+
                         while ($row = $result->fetch_assoc()) {
                             echo "<tr>";
+                            echo "<td>" . $row["id"] . "</td>";
                             // Display profile image
                             echo "<td>";
                             if (!empty($row['profile_image'])) {

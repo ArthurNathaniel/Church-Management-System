@@ -1,13 +1,15 @@
 <?php
 session_start();
 
+// Include database connection
+include "db.php";
+
 if (!isset($_SESSION['username'])) {
     header("Location: login.php");
     exit;
 }
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    include "db.php";
 
     // Process profile image upload
     $targetDirectory = "uploads/";
@@ -19,28 +21,33 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $check = getimagesize($_FILES["file-input"]["tmp_name"]);
     if ($check === false) {
         $uploadOk = 0;
+        echo "File is not an image.";
     }
 
     // Check file size
-    if ($_FILES["file-input"]["size"] > 500000) {
-        $uploadOk = 0;
-    }
+    // if ($_FILES["file-input"]["size"] > 500000) {
+    //     $uploadOk = 0;
+    //     echo "File is too large.";
+    // }
 
     // Allow certain file formats
     $allowedExtensions = array("jpg", "jpeg", "png", "gif");
     if (!in_array($imageFileType, $allowedExtensions)) {
         $uploadOk = 0;
+        echo "Only JPG, JPEG, PNG, and GIF files are allowed.";
     }
 
     // Check if $uploadOk is set to 0 by an error
     if ($uploadOk == 0) {
         // You can handle errors here if needed
+        echo "File upload failed.";
     } else {
         if (move_uploaded_file($_FILES["file-input"]["tmp_name"], $targetFile)) {
             // File uploaded successfully
+            echo "File uploaded successfully.";
         } else {
             // Error uploading file
-            echo '<script>alert("Error uploading file."); window.location.href = "addmember.php";</script>';
+            echo "Error uploading file.";
             exit;
         }
     }
