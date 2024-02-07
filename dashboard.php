@@ -9,8 +9,6 @@ if (!isset($_SESSION['username'])) {
 include "db.php";
 // Retrieve the username from the session
 $username = $_SESSION['username'];
-    
-
 
 // Initialize variables to avoid errors
 $totalMembers = 0;
@@ -68,7 +66,7 @@ $resultConfirmation = $conn->query($confirmationQuery);
     <title>Dashboard - St. Theresa Catholic Church</title>
     <link rel="stylesheet" href="./css/base.css">
     <link rel="stylesheet" href="./css/dashboard.css">
-    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
 <body>
@@ -76,276 +74,378 @@ $resultConfirmation = $conn->query($confirmationQuery);
 
     <div class="dashboard-container dash-grid">
         <div class="total-members dash-card">
-            <h1>Welcome, <?php echo $username; ?> !</h1>
+            <h1>Welcome, <?php echo $username; ?>!</h1>
         </div>
         <div class="total-members dash-card">
             <h2>Total Members</h2>
             <p><?php echo $totalMembers; ?></p>
         </div>
 
+        <!-- Gender Distribution chart container -->
         <div class="gender-count dash-card">
-
-            <div id="genderChart"></div>
+            <canvas id="genderChart"></canvas>
         </div>
 
+        <!-- Marital Status Distribution chart container -->
         <div class="martial-status-count dash-card">
-
-            <div id="maritalStatusChart"></div>
+            <canvas id="maritalStatusChart"></canvas>
         </div>
 
+        <!-- Mother's Denomination Distribution chart container -->
         <div class="mother-denomination-count dash-card">
-
-            <div id="motherDenominationChart"></div>
+            <canvas id="motherDenominationChart"></canvas>
         </div>
 
+        <!-- Father's Denomination Distribution chart container -->
         <div class="father-denomination-count dash-card">
-
-            <div id="fatherDenominationChart"></div>
+            <canvas id="fatherDenominationChart"></canvas>
         </div>
 
+        <!-- Nationality Distribution chart container -->
         <div class="nationality-count dash-card">
-
-            <div id="nationalityChart"></div>
+            <canvas id="nationalityChart"></canvas>
         </div>
 
+        <!-- Baptized Distribution chart container -->
         <div class="baptized-count dash-card">
-
-            <div id="baptizedChart"></div>
+            <canvas id="baptizedChart"></canvas>
         </div>
 
+        <!-- Confirmation Distribution chart container -->
         <div class="confirmation-count dash-card">
-
-            <div id="confirmationChart"></div>
+            <canvas id="confirmationChart"></canvas>
         </div>
     </div>
 
     <script>
         // Data for Gender Distribution chart
-        var genderData = [
-            <?php
-            while ($row = $resultGroupGender->fetch_assoc()) {
-                echo "['{$row['gender']}', {$row['genderCount']}],";
+        var genderData = {
+            labels: [
+                <?php
+                while ($row = $resultGroupGender->fetch_assoc()) {
+                    echo "'{$row['gender']}',";
+                }
+                ?>
+            ],
+            datasets: [{
+                label: 'Gender',
+                data: [
+                    <?php
+                    $resultGroupGender->data_seek(0); // Reset pointer
+                    while ($row = $resultGroupGender->fetch_assoc()) {
+                        echo "{$row['genderCount']},";
+                    }
+                    ?>
+                ],
+                backgroundColor: [
+
+                    '#ff4961',
+                    '#6158e5'
+                    // Add more colors as needed
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    // Add more colors as needed
+                ],
+                borderWidth: 1
+            }]
+        };
+
+        // Initialize Chart.js for Gender Distribution chart
+        var genderChart = new Chart(document.getElementById('genderChart'), {
+            type: 'doughnut',
+            data: genderData,
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+                // Add more options as needed
             }
-            ?>
-        ];
+        });
 
         // Data for Marital Status Distribution chart
-        var maritalStatusData = [
-            <?php
-            while ($row = $resultGroupMartialStatus->fetch_assoc()) {
-                echo "['{$row['martialstatus']}', {$row['martialStatusCount']}],";
+        var maritalStatusData = {
+            labels: [
+                <?php
+                while ($row = $resultGroupMartialStatus->fetch_assoc()) {
+                    echo "'{$row['martialstatus']}',";
+                }
+                ?>
+            ],
+            datasets: [{
+                label: 'Marital Status',
+                data: [
+                    <?php
+                    $resultGroupMartialStatus->data_seek(0);
+                    while ($row = $resultGroupMartialStatus->fetch_assoc()) {
+                        echo "{$row['martialStatusCount']},";
+                    }
+                    ?>
+                ],
+                backgroundColor: [
+                    '#ff4961',
+                    '#6158e5'
+                    // Add more colors as needed
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    // Add more colors as needed
+                ],
+                borderWidth: 1
+            }]
+        };
+
+        // Initialize Chart.js for Marital Status Distribution chart
+        var maritalStatusChart = new Chart(document.getElementById('maritalStatusChart'), {
+            type: 'doughnut',
+            data: maritalStatusData,
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+                // Add more options as needed
             }
-            ?>
-        ];
+        });
 
         // Data for Mother's Denomination Distribution chart
-        var motherDenominationData = [
-            <?php
-            while ($row = $resultMotherDenomination->fetch_assoc()) {
-                echo "['{$row['mothersdenomination']}', {$row['motherDenominationCount']}],";
+        var motherDenominationData = {
+            labels: [
+                <?php
+                while ($row = $resultMotherDenomination->fetch_assoc()) {
+                    echo "'{$row['mothersdenomination']}',";
+                }
+                ?>
+            ],
+            datasets: [{
+                label: "Mother's Denomination",
+                data: [
+                    <?php
+                    $resultMotherDenomination->data_seek(0);
+                    while ($row = $resultMotherDenomination->fetch_assoc()) {
+                        echo "{$row['motherDenominationCount']},";
+                    }
+                    ?>
+                ],
+                backgroundColor: [
+                    '#ff4961',
+                    '#6158e5'
+                    // Add more colors as needed
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    // Add more colors as needed
+                ],
+                borderWidth: 1
+            }]
+        };
+
+        // Initialize Chart.js for Mother's Denomination Distribution chart
+        var motherDenominationChart = new Chart(document.getElementById('motherDenominationChart'), {
+            type: 'doughnut',
+            data: motherDenominationData,
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+                // Add more options as needed
             }
-            ?>
-        ];
+        });
 
         // Data for Father's Denomination Distribution chart
-        var fatherDenominationData = [
-            <?php
-            while ($row = $resultFatherDenomination->fetch_assoc()) {
-                echo "['{$row['fathersdenomination']}', {$row['fatherDenominationCount']}],";
+        var fatherDenominationData = {
+            labels: [
+                <?php
+                while ($row = $resultFatherDenomination->fetch_assoc()) {
+                    echo "'{$row['fathersdenomination']}',";
+                }
+                ?>
+            ],
+            datasets: [{
+                label: "Father's Denomination",
+                data: [
+                    <?php
+                    $resultFatherDenomination->data_seek(0);
+                    while ($row = $resultFatherDenomination->fetch_assoc()) {
+                        echo "{$row['fatherDenominationCount']},";
+                    }
+                    ?>
+                ],
+                backgroundColor: [
+                    '#ff4961',
+                    '#6158e5'
+                    // Add more colors as needed
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    // Add more colors as needed
+                ],
+                borderWidth: 1
+            }]
+        };
+
+        // Initialize Chart.js for Father's Denomination Distribution chart
+        var fatherDenominationChart = new Chart(document.getElementById('fatherDenominationChart'), {
+            type: 'doughnut',
+            data: fatherDenominationData,
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+                // Add more options as needed
             }
-            ?>
-        ];
+        });
 
         // Data for Nationality Distribution chart
-        var nationalityData = [
-            <?php
-            while ($row = $resultNationality->fetch_assoc()) {
-                echo "['{$row['country']}', {$row['nationalityCount']}],";
+        var nationalityData = {
+            labels: [
+                <?php
+                while ($row = $resultNationality->fetch_assoc()) {
+                    echo "'{$row['country']}',";
+                }
+                ?>
+            ],
+            datasets: [{
+                label: 'Nationality',
+                data: [
+                    <?php
+                    $resultNationality->data_seek(0);
+                    while ($row = $resultNationality->fetch_assoc()) {
+                        echo "{$row['nationalityCount']},";
+                    }
+                    ?>
+                ],
+                backgroundColor: [
+                    '#ff4961',
+                    '#6158e5'
+                    // Add more colors as needed
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    // Add more colors as needed
+                ],
+                borderWidth: 1
+            }]
+        };
+
+        // Initialize Chart.js for Nationality Distribution chart
+        var nationalityChart = new Chart(document.getElementById('nationalityChart'), {
+            type: 'doughnut',
+            data: nationalityData,
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+                // Add more options as needed
             }
-            ?>
-        ];
+        });
 
         // Data for Baptized Distribution chart
-        var baptizedData = [
-            <?php
-            while ($row = $resultBaptized->fetch_assoc()) {
-                echo "['{$row['baptized']}', {$row['baptizedCount']}],";
+        var baptizedData = {
+            labels: [
+                <?php
+                while ($row = $resultBaptized->fetch_assoc()) {
+                    echo "'{$row['baptized']}',";
+                }
+                ?>
+            ],
+            datasets: [{
+                label: 'Baptized',
+                data: [
+                    <?php
+                    $resultBaptized->data_seek(0);
+                    while ($row = $resultBaptized->fetch_assoc()) {
+                        echo "{$row['baptizedCount']},";
+                    }
+                    ?>
+                ],
+                backgroundColor: [
+                    '#ff4961',
+                    '#6158e5'
+                    // Add more colors as needed
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    // Add more colors as needed
+                ],
+                borderWidth: 1
+            }]
+        };
+
+        // Initialize Chart.js for Baptized Distribution chart
+        var baptizedChart = new Chart(document.getElementById('baptizedChart'), {
+            type: 'doughnut',
+            data: baptizedData,
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+                // Add more options as needed
             }
-            ?>
-        ];
+        });
 
         // Data for Confirmation Distribution chart
-        var confirmationData = [
-            <?php
-            while ($row = $resultConfirmation->fetch_assoc()) {
-                echo "['{$row['confirmed']}', {$row['confirmationCount']}],";
+        var confirmationData = {
+            labels: [
+                <?php
+                while ($row = $resultConfirmation->fetch_assoc()) {
+                    echo "'{$row['confirmed']}',";
+                }
+                ?>
+            ],
+            datasets: [{
+                label: 'Confirmation',
+                data: [
+                    <?php
+                    $resultConfirmation->data_seek(0);
+                    while ($row = $resultConfirmation->fetch_assoc()) {
+                        echo "{$row['confirmationCount']},";
+                    }
+                    ?>
+                ],
+                backgroundColor: [
+                    '#ff4961',
+                    '#6158e5'
+                    // Add more colors as needed
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    // Add more colors as needed
+                ],
+                borderWidth: 1
+            }]
+        };
+
+        // Initialize Chart.js for Confirmation Distribution chart
+        var confirmationChart = new Chart(document.getElementById('confirmationChart'), {
+            type: 'doughnut',
+            data: confirmationData,
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+                // Add more options as needed
             }
-            ?>
-        ];
-
-        // Initialize Highcharts for Gender Distribution chart
-        Highcharts.chart('genderChart', {
-            chart: {
-                type: 'column',
-                options3d: {
-                    enabled: true,
-                    alpha: 45
-                }
-            },
-            title: {
-                text: 'Gender Distribution'
-            },
-            xAxis: {
-                type: 'category'
-            },
-            yAxis: {
-                title: {
-                    text: 'Count'
-                }
-            },
-            plotOptions: {
-                pie: {
-                    innerSize: 100,
-                    depth: 45
-                }
-            },
-            series: [{
-                name: 'Gender',
-                data: genderData
-            }]
-        });
-
-        // Initialize Highcharts for Marital Status Distribution chart
-        Highcharts.chart('maritalStatusChart', {
-            chart: {
-
-                type: 'pie',
-            },
-            title: {
-                text: 'Marital Status Distribution'
-            },
-            xAxis: {
-                type: 'category'
-            },
-            yAxis: {
-                title: {
-                    text: 'Count'
-                }
-            },
-            series: [{
-                name: 'Marital Status',
-                data: maritalStatusData
-            }]
-        });
-
-        // Initialize Highcharts for Mother's Denomination Distribution chart
-        Highcharts.chart('motherDenominationChart', {
-            chart: {
-                type: 'pie',
-            },
-            title: {
-                text: "Mother's Denomination Distribution"
-            },
-            xAxis: {
-                type: 'category'
-            },
-            yAxis: {
-                title: {
-                    text: 'Count'
-                }
-            },
-            series: [{
-                name: "Mother's Denomination",
-                data: motherDenominationData
-            }]
-        });
-
-        // Initialize Highcharts for Father's Denomination Distribution chart
-        Highcharts.chart('fatherDenominationChart', {
-            chart: {
-                type: 'pie',
-            },
-            title: {
-                text: "Father's Denomination Distribution"
-            },
-            xAxis: {
-                type: 'category'
-            },
-            yAxis: {
-                title: {
-                    text: 'Count'
-                }
-            },
-            series: [{
-                name: "Father's Denomination",
-                data: fatherDenominationData
-            }]
-        });
-
-        // Initialize Highcharts for Nationality Distribution chart
-        Highcharts.chart('nationalityChart', {
-            chart: {
-                type: 'pie',
-            },
-            title: {
-                text: 'Nationality Distribution'
-            },
-            xAxis: {
-                type: 'category'
-            },
-            yAxis: {
-                title: {
-                    text: 'Count'
-                }
-            },
-            series: [{
-                name: 'Nationality',
-                data: nationalityData
-            }]
-        });
-
-        // Initialize Highcharts for Baptized Distribution chart
-        Highcharts.chart('baptizedChart', {
-            chart: {
-                type: 'pie',
-            },
-            title: {
-                text: 'Baptized Distribution'
-            },
-            xAxis: {
-                type: 'category'
-            },
-            yAxis: {
-                title: {
-                    text: 'Count'
-                }
-            },
-            series: [{
-                name: 'Baptized',
-                data: baptizedData
-            }]
-        });
-
-        // Initialize Highcharts for Confirmation Distribution chart
-        Highcharts.chart('confirmationChart', {
-            chart: {
-                type: 'pie',
-            },
-            title: {
-                text: 'Confirmation Distribution'
-            },
-            xAxis: {
-                type: 'category'
-            },
-            yAxis: {
-                title: {
-                    text: 'Count'
-                }
-            },
-            series: [{
-                name: 'Confirmation',
-                data: confirmationData
-            }]
         });
     </script>
 
