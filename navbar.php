@@ -45,7 +45,7 @@
 
   </div>
   <button id="toggleButton">
-      <i class="fa-solid fa-bars-staggered"></i>
+      <i class="fa-solid fa-bars-staggered"></i> MENU
   </button>
 
   <script>

@@ -3,7 +3,8 @@ session_start();
 
 // Check if the user is logged in
 if (!isset($_SESSION['username'])) {
-    header("Location: login.php"); // Redirect to the login page if not logged in
+    header("Location: login.php");
+    // Redirect to the login page if not logged in
 }
 
 include "db.php";
@@ -71,7 +72,7 @@ if (!$result) {
                 <tbody>
                     <?php
                     if ($result->num_rows > 0) {
-                       
+
 
                         while ($row = $result->fetch_assoc()) {
                             echo "<tr>";
@@ -96,7 +97,7 @@ if (!$result) {
                             }
                             echo "</td>";
 
-                           
+
 
                             echo "</tr>";
                         }

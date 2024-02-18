@@ -83,36 +83,43 @@ $resultConfirmation = $conn->query($confirmationQuery);
 
         <!-- Gender Distribution chart container -->
         <div class="gender-count dash-card">
+            <p class="title">Gender</p>
             <canvas id="genderChart"></canvas>
         </div>
 
         <!-- Marital Status Distribution chart container -->
         <div class="martial-status-count dash-card">
+            <p class="title">Marital Status</p>
             <canvas id="maritalStatusChart"></canvas>
         </div>
 
         <!-- Mother's Denomination Distribution chart container -->
         <div class="mother-denomination-count dash-card">
+            <p class="title">Mother's Denomination</p>
             <canvas id="motherDenominationChart"></canvas>
         </div>
 
         <!-- Father's Denomination Distribution chart container -->
         <div class="father-denomination-count dash-card">
+            <p class="title">Father's Denomination</p>
             <canvas id="fatherDenominationChart"></canvas>
         </div>
 
         <!-- Nationality Distribution chart container -->
         <div class="nationality-count dash-card">
+            <p class="title">Nationality</p>
             <canvas id="nationalityChart"></canvas>
         </div>
 
         <!-- Baptized Distribution chart container -->
         <div class="baptized-count dash-card">
+            <p class="title">Baptized</p>
             <canvas id="baptizedChart"></canvas>
         </div>
 
         <!-- Confirmation Distribution chart container -->
         <div class="confirmation-count dash-card">
+            <p class="title">Confirmed</p>
             <canvas id="confirmationChart"></canvas>
         </div>
     </div>
